@@ -1,5 +1,5 @@
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};  // projectData = []; array is also possible, both are objects in JS 
+projectData = [];  // projectData = []; array is also possible, both are objects in JS 
 
 // Require Express to run server and routes
 const express = require('express');     // code by Alex hinzugefügt am 12.04
@@ -39,41 +39,49 @@ const server = app.listen(port, listening);                          // code by 
 
 
     
-// TESTING FOR PRACTICE
+//TESTING FOR PRACTICE
 app.get('/', function(req, res) {
     res.send('Hello World');
 })
 
-app.get('/', function(request, response) {
+/* app.get('/', function(request, response) {
     response.send(projectData);
-})
+})  */
 
 
 
-//Add a GET rout that returns projectData
-app.get('/allDataSendFromServer', allData());
+//Add a GET route that returns projectData
+// GET https://127.0.0.1:8000/.../projectdata
+// 200 OK: {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
+app.get('/projectdata', allData);
 
-    function allData(request, response) {
-        response.send(projectData);
-        //???   projectData = [];
-        //???   return projectData
+function allData(request, response) {
+    console.log('test');
+    response.send(projectData);
+    console.log(projectData);
+    //???   projectData = [];
+    //???   return projectData
 
-    }
+}
 
 
 
 //Add a POST route that adds incoming data to projectData
-app.post('/addData', addIncomingDataToProjectData);
+// POST https://127.0.0.1:8000/.../projectdata : {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
+// 200 OK: {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
+app.post('/projectdata', addIncomingDataToProjectData);
 
     function addIncomingDataToProjectData(request, response) {
-        console.log(req.body);
+        console.log(request.body);
         newEntryToProjectData = {
-            date: req.body.date,
-            temp: req.body.temp,
-            content: req.body.content
+            date: request.body.date,
+            temp: request.body.temp,
+            content: request.body.content
          }
 
          projectData.push(newEntryToProjectData);
+         //projectData.push(body);  --> dann wäre newEntrytoProjectData komplet unnötig???
+        response.send(newEntryToProjectData);
     }
 
 
