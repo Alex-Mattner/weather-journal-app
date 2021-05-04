@@ -1,7 +1,7 @@
 /* Global Variables */
-const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip='
+const baseURL = 'http://api.openweathermap.org/data/2.5/weather?zip=';
 const apiKey = '523847e1c3ae8b74f9b3303c447bab38';
-const serverBaseURL = 'http://127.0.0.1:8000' 
+const serverBaseURL = 'http://127.0.0.1:8000'; 
        
 
 // Create a new date instance dynamically with JS
@@ -26,23 +26,18 @@ generate.addEventListener('click', async (event) => {
     await getWeatherByZipFromOpenWeatherApi(baseURL, zipCode, apiKey)
 
         .then (result => { 
-            console.log(result);
             weather = result;
         });
-        
-        //console.log(weather);
-
-    let newProjectData = {
+       
+    projectData = {
         date: d,
         temp: weather.main.temp,
         content: document.getElementById('feelings').value
     };
+    
+    await postProjectDataToAPI(projectData);
 
-    //console.log('send post request to server')
-    await postProjectDataToAPI(newProjectData);
-
-    //console.log('update UI');
-    await updateUserInterface();
+    await updateUserInterface(projectData);
 
 })
 
@@ -51,36 +46,24 @@ generate.addEventListener('click', async (event) => {
 const getWeatherByZipFromOpenWeatherApi = async (baseURL, zipCode, apiKey ) => {
     
     const url = `${baseURL}${zipCode}&appid=${apiKey}`;
-    //console.log(url);
-
-    const userData = {
-        zip: zipCode,
-        feelings: feelings,
-        newDate
-    }
-    //console.log(userData);
-
+    
     // initiation of storage variable
     let result; 
 
     await fetch(url)
         .then (response => response.json())
         .then (data => {
-            console.log(data); 
-            console.log('return weather data');
             result =  data;
         })
         .catch (error => console.log('error', error))
 
-    console.log(result);
     return result
+
 }
 
 
 // function to add data to POST request
 const postProjectDataToAPI = async (data = {}) => {
-   
-    console.log(data);
 
     const request =  {
         method: 'POST',
@@ -88,7 +71,7 @@ const postProjectDataToAPI = async (data = {}) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        //create JSON string from JS object --> body data must match content type 
+        //create JSON string from object (--> body data must match content type) 
         body: JSON.stringify(data)
     };
 
@@ -110,29 +93,20 @@ const postProjectDataToAPI = async (data = {}) => {
 
 
 // updateUserInterface() function to GET the project data
-const updateUserInterface = async () => {
-    console.log('get projectdata from server');
-    await fetch(`${serverBaseURL}/projectdata`)
+const updateUserInterface = async (projectData) => {
     
-    .then( async response =>   {
-        //console.log('processing response');
-        
-            const responseData = await response.json();
-            //console.log(responseData);
+    await fetch(`${serverBaseURL}/projectdata`);
+                      
+            try {
+                document.getElementById('date').innerHTML = 'Date: ' + projectData.date;
+                document.getElementById('temp').innerHTML = 'Temp: ' + projectData.temp;
+                document.getElementById('content').innerHTML = 'Feeling: ' + projectData.content;
+            } 
 
-        try {
-            document.getElementById('date').innerHTML = 'Date:' + responseData[0].date;
-            document.getElementById('temp').innerHTML = 'Temp:' + responseData[0].temp;
-            document.getElementById('content').innerHTML = 'Feel:' + responseData[0].content;
-        } 
+            catch(error){
+                console.log('error', error);
+            }
 
-        catch(error){
-            console.log('error', error);
-        }
-
-    });
-    
-    
 }
 
 

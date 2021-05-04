@@ -38,10 +38,10 @@ const server = app.listen(port, listening);
     }
 
 
-    
+
 //Add a GET route that returns projectData
-// GET https://127.0.0.1:8000/.../projectdata
-// 200 OK: {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
+    // GET https://127.0.0.1:8000/.../projectdata
+    // 200 OK: {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
 app.get('/projectdata', allData);
 
 function allData(request, response) {
@@ -53,8 +53,8 @@ function allData(request, response) {
 
 
 //Add a POST route that adds incoming data to projectData
-// POST https://127.0.0.1:8000/.../projectdata : {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
-// 200 OK: {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
+    // POST https://127.0.0.1:8000/.../projectdata : {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
+    // 200 OK: {"temperature": 14, "date": 15.12.2019, "user_experiance": "Bal blub foo"}
 app.post('/projectdata', addIncomingDataToProjectData);
 
     function addIncomingDataToProjectData(request, response) {
